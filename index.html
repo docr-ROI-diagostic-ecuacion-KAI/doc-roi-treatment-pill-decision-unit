@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Decision Unit Lab → ABM Plan Engine · DOC ROI</title>
+  <meta name="description" content="B2B Decision Unit and Contact Map laboratory for Account-Based Marketing." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --black:#0B0F19;
+      --navy:#003B5C;
+      --navy-2:#00527A;
+      --sky:#D8ECF8;
+      --sky-2:#EAF6FB;
+      --blue:#7EC8E3;
+      --ink:#101820;
+      --muted:#667085;
+      --line:#DDE6EE;
+      --panel:#FFFFFF;
+      --soft:#F6F9FB;
+      --warn:#F2B84B;
+      --green:#7DBE9A;
+      --violet:#A9A1E8;
+      --shadow:0 18px 45px rgba(16,24,40,.10);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#EEF3F6;color:var(--ink)}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .app-shell{min-height:100vh;display:flex;flex-direction:column}
+    .topbar{
+      position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+      gap:18px;padding:14px 22px;background:rgba(11,15,25,.97);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)
+    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0;text-decoration:none}
+    .brand-mark{width:132px;height:44px;border-radius:0;object-fit:contain;background:transparent;box-shadow:none}
+    .brand-copy{min-width:0}
+    .brand-copy strong{display:block;font-size:15px;letter-spacing:.02em}
+    .brand-copy span{display:block;margin-top:2px;color:#B9C5CF;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 12px;border-radius:11px;font-weight:800;font-size:12px;
+      transition:.18s ease;box-shadow:0 1px 0 rgba(16,24,40,.02)
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(16,24,40,.08)}
+    .btn.dark{background:var(--navy);color:#fff;border-color:var(--navy)}
+    .btn.ghost-dark{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.16)}
+    .open-tool-btn{min-width:150px;text-align:center;background:#fff;color:#02070B;border-color:#fff;border-radius:999px;font-size:16px;padding:13px 22px;text-decoration:none}
+    .btn.small{padding:7px 9px;font-size:11px}
+    .product-stage{
+      padding:18px 22px 14px;background:linear-gradient(180deg,#FFFFFF 0%,#F7FAFC 100%);border-bottom:1px solid var(--line)
+    }
+    .product-card{
+      max-width:1600px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px rgba(15,23,42,.05);overflow:hidden
+    }
+    .section-head{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 16px;border-bottom:1px solid var(--line)
+    }
+    .section-head .eyebrow{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--navy)}
+    .section-head h1,.section-head h2,.section-head h3{margin:3px 0 0;font-size:18px;line-height:1.1}
+    .product-grid{display:grid;grid-template-columns:1.1fr 1.6fr 1.3fr 1.1fr;gap:10px;padding:14px}
+    .field{display:grid;gap:6px}
+    .field label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#475467}
+    .field input,.field textarea,.field select{
+      width:100%;border:1px solid #D7E1E8;background:#fff;color:var(--ink);border-radius:10px;padding:9px 10px;outline:none;
+      transition:border .15s, box-shadow .15s;font-size:12px
+    }
+    .field textarea{min-height:76px;resize:vertical}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:#77B9D4;box-shadow:0 0 0 3px rgba(126,200,227,.16)}
+    .micro-handover{
+      display:flex;align-items:flex-start;gap:9px;padding:10px 14px 14px;color:#526071;font-size:11px;line-height:1.45
+    }
+    .micro-handover b{color:var(--navy)}
+    .workspace-wrap{padding:14px 22px 0;flex:1;min-height:680px}
+    .workspace{
+      max-width:1600px;margin:0 auto;display:grid;grid-template-columns:285px minmax(0,1fr) 340px;gap:10px;min-height:650px;
+      transition:grid-template-columns .22s ease
+    }
+    .workspace.left-collapsed{grid-template-columns:54px minmax(0,1fr) 340px}
+    .workspace.right-collapsed{grid-template-columns:285px minmax(0,1fr) 54px}
+    .workspace.left-collapsed.right-collapsed{grid-template-columns:54px minmax(0,1fr) 54px}
+    .side-panel,.canvas-panel{
+      background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px rgba(15,23,42,.05);overflow:hidden;min-width:0
+    }
+    .side-panel{display:flex;flex-direction:column;min-height:650px}
+    .panel-head{
+      display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px;border-bottom:1px solid var(--line);background:#FBFCFD;user-select:none
+    }
+    .panel-head .title-wrap{min-width:0}
+    .panel-head strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .panel-head span{display:block;margin-top:2px;font-size:9px;color:#7A8793;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .collapse-hint{font-size:10px;color:#98A2B3}
+    .side-panel.collapsed .panel-body,.side-panel.collapsed .panel-head .title-wrap,.side-panel.collapsed .collapse-hint{display:none}
+    .side-panel.collapsed .panel-head{height:100%;padding:10px 7px;justify-content:center;align-items:flex-start}
+    .side-panel.collapsed .panel-head:after{
+      content:"↔";margin-top:3px;width:28px;height:28px;border-radius:8px;background:var(--sky-2);color:var(--navy);display:grid;place-items:center;font-weight:900
+    }
+    .panel-body{padding:12px;overflow:auto;flex:1}
+    .search-row{display:flex;gap:7px;margin-bottom:10px}
+    .search-row input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:11px}
+    .role-group{margin:10px 0 6px;font-size:9px;color:#7A8793;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+    .library{display:grid;gap:8px}
+    .library-card{
+      position:relative;border:1px solid #DCE6EC;border-radius:13px;padding:10px;background:#fff;display:grid;gap:4px;transition:.16s ease;cursor:grab
+    }
+    .library-card:hover{border-color:#9ECADD;box-shadow:0 8px 18px rgba(0,59,92,.08);transform:translateY(-1px)}
+    .library-card:active{cursor:grabbing}
+    .library-card strong{font-size:12px;color:#0B0F19}
+    .library-card small{font-size:10px;color:#6B7785;line-height:1.35}
+    .library-card .acronym{
+      position:absolute;right:9px;top:9px;font-size:9px;font-weight:900;background:var(--sky-2);color:var(--navy);padding:4px 6px;border-radius:7px
+    }
+    .custom-node-form{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:10px}
+    .custom-node-form input{border:1px solid var(--line);border-radius:10px;padding:8px 9px;font-size:11px;min-width:0}
+    .canvas-panel{display:flex;flex-direction:column;min-height:650px}
+    .canvas-toolbar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#FBFCFD;flex-wrap:wrap
+    }
+    .canvas-toolbar .left,.canvas-toolbar .right{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .tool-pill{padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:10px;font-weight:900;color:#465467}
+    .tool-pill.active{background:var(--navy);border-color:var(--navy);color:#fff}
+    .canvas{
+      position:relative;flex:1;min-height:590px;overflow:hidden;
+      background-color:#F8FBFD;
+      background-image:radial-gradient(circle at 1px 1px, #D4E1E8 1.2px, transparent 0);
+      background-size:22px 22px;
+    }
+    .canvas.empty:after{
+      content:"Drag a contact from the library or use Load example";
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#8A98A6;font-size:12px;font-weight:700;pointer-events:none
+    }
+    .edge-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+    .edge-path{pointer-events:none}
+    .edge-hit{fill:none;stroke:transparent;stroke-width:20;pointer-events:stroke;cursor:pointer}
+    .edge-hit:hover + .edge-path{filter:drop-shadow(0 0 5px rgba(0,59,92,.28))}
+    .edge-path.selected{filter:drop-shadow(0 0 5px rgba(0,59,92,.38))}
+    .edge-label{font-size:10px;font-weight:900;fill:#003B5C;paint-order:stroke;stroke:#F8FBFD;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+    .edge-delete{pointer-events:all;cursor:pointer}
+    .edge-delete circle{fill:#0B0F19;stroke:#fff;stroke-width:2;filter:drop-shadow(0 4px 8px rgba(11,15,25,.25))}
+    .edge-delete text{fill:#fff;font-size:14px;font-weight:900;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+    .edge-delete:hover circle{fill:#003B5C}
+    .edge-direction{font-size:9px;font-weight:900;fill:#526071;paint-order:stroke;stroke:#F8FBFD;stroke-width:4px;pointer-events:none}
+    .map-node{
+      position:absolute;width:190px;min-height:102px;border:1px solid #C9D9E3;border-radius:15px;background:#fff;box-shadow:0 12px 26px rgba(18,38,63,.10);
+      user-select:none;touch-action:none;overflow:hidden
+    }
+    .map-node.selected{outline:3px solid rgba(126,200,227,.35);border-color:#6FB5D1}
+    .map-node.connect-source{outline:3px solid rgba(242,184,75,.34);border-color:#F2B84B}
+    .node-topline{height:6px;background:#BFD8E6}
+    .map-node[data-role="Decision Maker"] .node-topline{background:#003B5C}
+    .map-node[data-role="Push Maker"] .node-topline{background:#7DBE9A}
+    .map-node[data-role="Influencer"] .node-topline{background:#7EC8E3}
+    .map-node[data-role="Prescriptor"] .node-topline{background:#A9A1E8}
+    .map-node[data-role="Unassigned"] .node-topline{background:#C7D0D9}
+    .node-inner{padding:9px 10px 10px}
+    .node-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .node-head strong{font-size:12px;line-height:1.15}
+    .node-head button{
+      width:20px;height:20px;border:0;border-radius:6px;background:#F3F6F8;color:#687582;font-weight:900;padding:0
+    }
+    .node-sub{margin-top:3px;font-size:9px;color:#74808C}
+    .role-badge{
+      display:inline-flex;margin-top:8px;padding:5px 7px;border-radius:999px;background:#EEF4F7;color:#003B5C;font-size:9px;font-weight:900
+    }
+    .node-pain{margin-top:7px;font-size:9px;color:#465467;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .node-ports{position:absolute;left:0;right:0;bottom:5px;display:flex;justify-content:space-between;padding:0 8px;pointer-events:none}
+    .node-port{width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid #7A9AAF}
+    .inspector-empty{
+      height:100%;display:grid;place-items:center;text-align:center;color:#7B8794;padding:24px;font-size:11px;line-height:1.5
+    }
+    .inspector-form{display:grid;gap:11px}
+    .inspector-section{border:1px solid #E2E9EE;border-radius:13px;background:#FBFCFD;padding:10px}
+    .inspector-section h4{margin:0 0 9px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#4F5D6A}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .role-option{
+      border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px;font-size:9px;font-weight:900;text-align:center;color:#425466
+    }
+    .role-option.active{border-color:#6FB5D1;background:var(--sky-2);color:var(--navy)}
+    .relation-compose{display:grid;gap:7px}
+    .relation-compose .row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .subtle{font-size:9px;color:#7A8793;line-height:1.4}
+    .bottom-zone{padding:14px 22px 24px}
+    .results{
+      max-width:1600px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px rgba(15,23,42,.05);overflow:hidden
+    }
+    .results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+    .results-head h3{margin:0;font-size:15px}
+    .results-head p{margin:3px 0 0;color:#7B8794;font-size:10px}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:1400px}
+    th,td{padding:9px 10px;border-bottom:1px solid #EDF1F4;text-align:left;vertical-align:top;font-size:10px;line-height:1.35}
+    th{position:sticky;top:0;background:#F8FAFC;color:#4F5D6A;font-size:9px;text-transform:uppercase;letter-spacing:.05em}
+    td strong{font-size:10px}
+    .empty-row{text-align:center;color:#8A98A6;padding:20px}
+    .toast{
+      position:fixed;right:18px;bottom:18px;z-index:100;background:#0B0F19;color:#fff;padding:11px 13px;border-radius:11px;font-size:11px;font-weight:700;
+      box-shadow:0 14px 28px rgba(0,0,0,.2);opacity:0;transform:translateY(8px);pointer-events:none;transition:.18s ease
+    }
+    .toast.show{opacity:1;transform:translateY(0)}
+    .modal-backdrop{
+      position:fixed;inset:0;z-index:90;background:rgba(11,15,25,.48);display:none;align-items:center;justify-content:center;padding:20px
+    }
+    .modal-backdrop.show{display:flex}
+    .modal{width:min(560px,100%);background:#fff;border-radius:18px;box-shadow:0 28px 60px rgba(0,0,0,.22);overflow:hidden}
+    .modal .section-head{background:#FBFCFD}
+    .modal-body{padding:14px;display:grid;gap:10px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;padding:0 14px 14px}
+    .abm-stage{padding:18px 22px 0;background:#EEF3F6;border-bottom:1px solid var(--line)}
+    .abm-card{max-width:1600px;margin:0 auto 12px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px rgba(15,23,42,.05);overflow:hidden}
+    .abm-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px}
+    .abm-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .abm-note{margin:0 14px 14px;border-left:4px solid var(--navy);background:var(--sky-2);border-radius:10px;padding:10px 12px;color:#244053;font-size:11px;line-height:1.45}
+    .model-guide{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+    .model-guide span,.evidence-pill{display:inline-flex;align-items:center;border:1px solid #CFE0EA;background:#F7FBFD;color:var(--navy);border-radius:999px;padding:5px 8px;font-size:9px;font-weight:900}
+    .bottom-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);background:#FBFCFD}
+    .tab-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;font-size:11px;font-weight:900;color:#405060}
+    .tab-btn.active{background:var(--black);border-color:var(--black);color:#fff}
+    .tab-panel{display:none}.tab-panel.active{display:block}
+    .orchestration-wrap,.final-plan{padding:14px;display:grid;gap:12px}
+    .stage-matrix{overflow:auto;border:1px solid var(--line);border-radius:13px}
+    .stage-matrix table{min-width:1050px}
+    .final-hero{background:#07131F;color:#fff;border-radius:14px;padding:18px;display:grid;gap:8px}
+    .final-hero h2{margin:0;font-size:24px}.final-hero p{margin:0;color:#C8D7E2;font-size:12px;line-height:1.55}
+    .plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .plan-box{border:1px solid var(--line);border-radius:12px;background:#fff;padding:12px;display:grid;gap:6px;min-height:118px}
+    .plan-box h4{margin:0;color:var(--navy);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.plan-box p{margin:0;font-size:11px;line-height:1.5;color:#314456;white-space:pre-wrap}
+    .contact-plan{border:1px solid #CFE0EA;background:#F9FCFE;border-radius:13px;padding:12px;display:grid;gap:9px}
+    .contact-plan h4{margin:0;font-size:14px;color:#0B0F19}.contact-plan-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .contact-plan-grid div{border:1px solid #DDE9F1;background:#fff;border-radius:10px;padding:8px;font-size:10px;line-height:1.4}.contact-plan-grid b{display:block;color:var(--navy);font-size:9px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+    .warning-strip{margin:12px 14px 0;border:1px solid #F0D29B;background:#FFF8EA;color:#6B4E16;border-radius:11px;padding:10px 12px;font-size:11px;font-weight:800;display:none}
+    .warning-strip.show{display:block}
+    .print-only-brand{display:none}
+    @media (max-width:1180px){
+      .workspace,.workspace.left-collapsed,.workspace.right-collapsed,.workspace.left-collapsed.right-collapsed{grid-template-columns:240px minmax(0,1fr) 300px}
+      .product-grid,.abm-grid,.abm-grid.three{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:900px){
+      .product-stage,.workspace-wrap,.bottom-zone{padding-left:10px;padding-right:10px}
+      .workspace,.workspace.left-collapsed,.workspace.right-collapsed,.workspace.left-collapsed.right-collapsed{
+        grid-template-columns:1fr;grid-template-rows:auto minmax(620px,1fr) auto
+      }
+      .side-panel{min-height:0}
+      .side-panel.collapsed{min-height:52px}
+      .side-panel.collapsed .panel-head{height:52px;align-items:center}
+      .library{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .product-grid,.abm-grid,.abm-grid.three,.plan-grid,.contact-plan-grid{grid-template-columns:1fr}
+      .topbar{align-items:flex-start}
+    }
+    @media print{
+      .topbar,.product-stage,.abm-stage,.workspace-wrap,.results-head,.bottom-tabs,.results-head .top-actions{display:none!important}
+      body{background:#fff}
+      .workspace-wrap{padding:0}
+      .workspace{display:block;min-height:650px}
+      .canvas-panel{box-shadow:none;border:0;border-radius:0;min-height:650px}
+      .bottom-zone{padding:10px 0}
+      .print-only-brand{display:flex!important;align-items:center;gap:14px;background:#05070A;color:#fff;padding:16px 18px;margin-bottom:16px}.print-only-brand img{width:110px;height:auto;border-radius:4px}.results{box-shadow:none;border:0;border-radius:0}.tab-panel{display:none!important}.tab-panel#finalPanel{display:block!important}.final-hero{border-radius:0}.plan-grid,.contact-plan-grid{grid-template-columns:1fr 1fr}.contact-plan{break-inside:avoid}.plan-box{break-inside:avoid}
+      .table-wrap{overflow:visible}
+      table{min-width:0;font-size:8px}
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell" id="top">
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="DOC ROI">
+      <img class="brand-mark" src="https://docroi.marketing/wp-content/uploads/2026/05/Logo_Negro_DoC_ROI.jpg" alt="DOC ROI">
+    </a>
+    <div class="top-actions">
+      <a class="btn open-tool-btn" href="#abm-workspace">Open Tool</a>
+    </div>
+  </header>
+
+
+  <section class="abm-stage">
+    <div class="abm-card">
+      <div class="section-head">
+        <div><div class="eyebrow">00 · ABM Programme</div><h1>Programme, Account Research & Opportunity</h1></div>
+        <div class="top-actions"><button class="btn small dark" id="loadExampleBtn">Load Don Espadín</button><button class="btn small" id="toggleAbmBtn">Hide setup</button></div>
+      </div>
+      <div id="abmContent">
+        <div class="abm-grid">
+          <div class="field"><label>Programme name</label><input id="programName" placeholder="Don Espadín · Madrid Premium Hotels"></div>
+          <div class="field"><label>Organisation model</label><select id="orgModel"><option>Commercial Account</option><option>Stakeholder Organisation</option></select></div>
+          <div class="field"><label>ABM model</label><select id="abmModel"><option>1:1</option><option>Few</option><option>Lead</option><option selected>Many</option><option>Bulk</option></select><div class="model-guide"><span>1:1</span><span>Few ≤5</span><span>Lead 6-15</span><span>Many</span><span>Bulk 100+</span></div></div>
+          <div class="field"><label>Current wave</label><input id="currentWave" placeholder="Wave 01 · 10 account slots"></div>
+        </div>
+        <div class="abm-grid">
+          <div class="field"><label>Product / Service</label><input id="programProduct" placeholder="Mezcal Espadín · Foundational Edition"></div>
+          <div class="field"><label>Sector</label><input id="sector" placeholder="Premium hospitality / HORECA"></div>
+          <div class="field"><label>Geographic market</label><input id="geographicMarket" placeholder="Madrid, Spain"></div>
+          <div class="field"><label>Number of target accounts</label><input id="targetAccounts" type="number" min="0" placeholder="10"></div>
+        </div>
+        <div class="abm-grid three">
+          <div class="field"><label>Strategic objective</label><textarea id="strategicObjective" placeholder="What commercial decision should this ABM programme improve?"></textarea></div>
+          <div class="field"><label>Opportunity description</label><textarea id="opportunityDescription" placeholder="Define the buying situation before building the Decision Unit."></textarea></div>
+          <div class="field"><label>Account hook</label><textarea id="accountHook" placeholder="The shared reason to engage the organisation across several participants."></textarea></div>
+        </div>
+        <div class="abm-grid">
+          <div class="field"><label>Account name / slot</label><input id="accountName" placeholder="Account slot 01 · To research"></div>
+          <div class="field"><label>Parent account / location</label><input id="parentAccount" placeholder="Parent group, business unit or location"></div>
+          <div class="field"><label>Expected commercial value</label><input id="expectedValue" placeholder="Unknown until researched"></div>
+          <div class="field"><label>Available ABM budget</label><input id="abmBudget" placeholder="Unknown / to define"></div>
+        </div>
+        <div class="abm-grid three">
+          <div class="field"><label>Why pursue this account?</label><textarea id="whyPursue" placeholder="Relevant opportunity, evidence and strategic fit."></textarea></div>
+          <div class="field"><label>Main risk / unknowns</label><textarea id="mainRisk" placeholder="Unknown values remain unknown; do not score them as zero."></textarea></div>
+          <div class="field"><label>Next research action</label><textarea id="nextResearchAction" placeholder="What should be validated next?"></textarea></div>
+        </div>
+        <div class="abm-grid">
+          <div class="field"><label>Opportunity Index</label><input id="opportunityIndex" placeholder="Score / note if known"></div>
+          <div class="field"><label>Consecution Index</label><input id="consecutionIndex" placeholder="Score / note if known"></div>
+          <div class="field"><label>Cooperation Index</label><input id="cooperationIndex" placeholder="Score / note if known"></div>
+          <div class="field"><label>Other Factors</label><input id="otherFactors" placeholder="Score / note if known"></div>
+        </div>
+        <div class="abm-note"><b>Logic:</b> B2B is modelled as account, opportunity, contacts, decision roles, relationships and consensus. A contact is a real person; a decision role belongs to this opportunity.</div>
+      </div>
+    </div>
+  </section>
+  <section class="product-stage">
+    <div class="product-card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">01 · Input</div>
+          <h1>Product Intelligence Handover</h1>
+        </div>
+        <button class="btn small" id="toggleProductBtn">Hide input</button>
+      </div>
+      <div id="productContent">
+        <div class="product-grid">
+          <div class="field">
+            <label>Product / Service</label>
+            <input id="productName" placeholder="e.g. AI-enabled commercial analytics platform" />
+          </div>
+          <div class="field">
+            <label>Value proposition</label>
+            <input id="valueProp" placeholder="What measurable value does it create?" />
+          </div>
+          <div class="field">
+            <label>Customer problem / Job</label>
+            <input id="customerProblem" placeholder="What business problem or job does it solve?" />
+          </div>
+          <div class="field">
+            <label>Commercial conditions</label>
+            <input id="commercial" placeholder="Price, contract, implementation, constraints..." />
+          </div>
+        </div>
+        <div class="product-grid" style="padding-top:0">
+          <div class="field">
+            <label>Key attributes</label>
+            <textarea id="attributes" placeholder="Capabilities, integrations, features..."></textarea>
+          </div>
+          <div class="field">
+            <label>Expected benefits</label>
+            <textarea id="benefits" placeholder="Financial, operational, strategic, customer..."></textarea>
+          </div>
+          <div class="field">
+            <label>Evidence & trust</label>
+            <textarea id="evidence" placeholder="Cases, certifications, benchmarks, references..."></textarea>
+          </div>
+          <div class="field">
+            <label>Use cases / hypotheses</label>
+            <textarea id="useCases" placeholder="Priority use cases and assumptions to validate..."></textarea>
+          </div>
+        </div>
+        <div class="micro-handover">
+          <b>Process logic:</b>
+          Product intelligence establishes the value hypothesis. The Decision Unit map then identifies who can approve, promote, influence or prescribe that value inside the account.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="workspace-wrap" id="abm-workspace">
+    <div class="workspace" id="workspace">
+      <aside class="side-panel left-panel" id="leftPanel">
+        <div class="panel-head" id="leftPanelHead" title="Double-click to collapse / expand">
+          <div class="title-wrap">
+            <strong>Decision Unit Library</strong>
+            <span>Drag a role into the canvas</span>
+          </div>
+          <div class="collapse-hint">Double-click</div>
+        </div>
+        <div class="panel-body">
+          <div class="search-row">
+            <input id="roleSearch" placeholder="Search CFO, CMO, Legal..." />
+          </div>
+          <div class="role-group">Executive & functional roles</div>
+          <div class="library" id="roleLibrary"></div>
+          <div class="role-group">Add a specific role</div>
+          <div class="custom-node-form">
+            <input id="customRoleInput" placeholder="e.g. Deputy Marketing Director" />
+            <button class="btn small dark" id="addCustomRoleBtn">Add</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="canvas-panel">
+        <div class="canvas-toolbar">
+          <div class="left">
+            <span class="tool-pill">02 · Contact Map</span>
+            <button class="btn small" id="connectBtn">Connect nodes</button>
+            <button class="btn small" id="cancelConnectBtn" style="display:none">Cancel connection</button>
+          </div>
+          <div class="right">
+            <span class="tool-pill" id="nodeCountPill">0 contacts</span>
+            <span class="tool-pill" id="edgeCountPill">0 relations</span>
+          </div>
+        </div>
+        <div class="canvas empty" id="canvas">
+          <svg class="edge-layer" id="edgeLayer" aria-hidden="true"></svg>
+        </div>
+      </main>
+
+      <aside class="side-panel right-panel" id="rightPanel">
+        <div class="panel-head" id="rightPanelHead" title="Double-click to collapse / expand">
+          <div class="title-wrap">
+            <strong>Contact Configuration</strong>
+            <span>Click any node to personalize it</span>
+          </div>
+          <div class="collapse-hint">Double-click</div>
+        </div>
+        <div class="panel-body" id="inspectorBody">
+          <div class="inspector-empty">
+            Select a contact node to define its role, pains, gains, decision criteria, value angle, content, communication and journey.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bottom-zone">
+    <div class="results">
+      <div class="print-only-brand"><img src="https://docroi.marketing/wp-content/uploads/2026/05/Logo_Negro_DoC_ROI.jpg" alt="DOC ROI"><strong id="printProjectName">ABM Plan</strong></div>
+      <div class="results-head">
+        <div><h3>Decision Unit outputs</h3><p>Dataset, ABM orchestration and final plan generated from the same working map.</p></div>
+        <div class="top-actions">
+          <button class="btn small" id="generatePlanBtn">Generate ABM plan</button>
+          <button class="btn small" id="csvBtn">Download Decision Unit CSV</button>
+          <button class="btn small" id="journeyCsvBtn">Download Journey CSV</button>
+          <button class="btn small" id="jsonBtn">Download ABM JSON</button>
+          <button class="btn small dark" id="crmBtn">Download CRM JSON</button>
+        </div>
+      </div>
+      <div class="bottom-tabs">
+        <button class="tab-btn active" data-tab="datasetPanel">Decision Unit Dataset</button>
+        <button class="tab-btn" data-tab="orchestrationPanel">ABM Orchestration</button>
+        <button class="tab-btn" data-tab="finalPanel">Final ABM Plan</button>
+      </div>
+      <div id="missingDecisionMaker" class="warning-strip">Decision Maker missing: this opportunity needs at least one validated decision stakeholder or a clear research gap.</div>
+      <div class="tab-panel active" id="datasetPanel"><div class="table-wrap"><table><thead><tr><th>Contact</th><th>Title</th><th>Role</th><th>Pains</th><th>Gains</th><th>Decision criteria</th><th>Value angle</th><th>Hook</th><th>Message</th><th>Content</th><th>Communication</th><th>Channels</th><th>Journey / Action</th><th>Influence</th></tr></thead><tbody id="resultsBody"><tr><td class="empty-row" colspan="14">Build the map to generate the dataset.</td></tr></tbody></table></div></div>
+      <div class="tab-panel" id="orchestrationPanel"><div class="orchestration-wrap" id="orchestrationBody"></div></div>
+      <div class="tab-panel" id="finalPanel"><div class="final-plan" id="finalPlanBody"></div></div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-backdrop" id="relationModal">
+  <div class="modal">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Relationship</div>
+        <h3>Configure connection</h3>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Relationship type</label>
+        <select id="relationType">
+          <option value="auto">Auto from source role</option>
+          <option value="Influence">Influence</option>
+          <option value="Pushes">Pushes internally</option>
+          <option value="Prescribes">Prescribes</option>
+          <option value="Approves">Approval / authority</option>
+          <option value="Collaborates">Collaborates</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Relationship note</label>
+        <input id="relationNote" placeholder="e.g. Agency recommendation shapes CMO choice" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="relationCancelBtn">Cancel</button>
+      <button class="btn dark" id="relationSaveBtn">Create relation</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const STORAGE_KEY = "docroi-decision-unit-lab-v1";
+  const roles = [
+    {title:"Chief Executive Officer", acronym:"CEO", desc:"Enterprise direction, strategic authority and executive sponsorship."},
+    {title:"Chief Financial Officer", acronym:"CFO", desc:"Finance, investment logic, risk, ROI, payback and budget authority."},
+    {title:"Chief Operating Officer", acronym:"COO", desc:"Operations, process performance, scalability and delivery risk."},
+    {title:"Chief Marketing Officer", acronym:"CMO", desc:"Growth, market, customer acquisition, brand and commercial impact."},
+    {title:"Chief Information Officer", acronym:"CIO", desc:"Information systems, architecture, governance and technology fit."},
+    {title:"Chief Technology Officer", acronym:"CTO", desc:"Technology strategy, platform feasibility, scalability and build choices."},
+    {title:"Chief Data Officer", acronym:"CDO", desc:"Data strategy, activation, governance, quality and value realization."},
+    {title:"Chief Information Security Officer", acronym:"CISO", desc:"Cybersecurity, compliance, controls and technical risk."},
+    {title:"Chief Human Resources Officer", acronym:"CHRO", desc:"People, workforce, skills, adoption and organizational impact."},
+    {title:"Chief Procurement Officer", acronym:"CPO", desc:"Procurement process, commercial terms, supplier governance and sourcing."},
+    {title:"Chief Legal Officer", acronym:"CLO", desc:"Legal risk, contracts, privacy, regulatory and policy fit."},
+    {title:"Head of Sales", acronym:"SALES", desc:"Revenue execution, pipeline, conversion, sales productivity and enablement."},
+    {title:"Head of Customer Experience", acronym:"CX", desc:"Customer journey, service quality, retention and experience outcomes."},
+    {title:"Head of Innovation", acronym:"INNO", desc:"Pilots, transformation, emerging solutions and internal sponsorship."},
+    {title:"Finance Director", acronym:"FIN", desc:"Business case validation, budgeting, controls and financial evidence."},
+    {title:"Marketing Director", acronym:"MKT", desc:"Campaign performance, demand generation, positioning and conversion."},
+    {title:"IT / Architecture Lead", acronym:"IT", desc:"Integration, security, maintenance, architecture and operational fit."},
+    {title:"Procurement Manager", acronym:"PROC", desc:"Vendor evaluation, negotiation, procurement policy and terms."},
+    {title:"Agency / Partner / Consultant", acronym:"EXT", desc:"External expert that can influence, prescribe or introduce the solution."}
+  ];
+
+  const state = {
+    product:{},
+    nodes:[],
+    edges:[],
+    selectedNodeId:null,
+    connectMode:false,
+    connectSourceId:null,
+    pendingTargetId:null,
+    selectedEdgeId:null
+  };
+
+  const $ = id => document.getElementById(id);
+  const workspace = $("workspace");
+  const canvas = $("canvas");
+  const edgeLayer = $("edgeLayer");
+  const inspectorBody = $("inspectorBody");
+  const roleLibrary = $("roleLibrary");
+  const toast = $("toast");
+
+  function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4); }
+  function esc(value){
+    return String(value == null ? "" : value).replace(/[&<>"']/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[s]));
+  }
+  function clip(value, n=74){ const s=String(value||""); return s.length>n ? s.slice(0,n-1)+"…" : s; }
+  function notify(message){
+    toast.textContent=message; toast.classList.add("show"); clearTimeout(notify.t); notify.t=setTimeout(()=>toast.classList.remove("show"),1700);
+  }
+  function save(){
+    collectProduct();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({product:state.product,nodes:state.nodes,edges:state.edges}));
+    renderTable(); updateCounts();
+  }
+  function load(){
+    try{
+      const data=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+      if(data){ state.product=data.product||{}; state.nodes=data.nodes||[]; state.edges=data.edges||[]; }
+    }catch(e){}
+    hydrateProduct();
+    renderAll();
+  }
+  function collectProduct(){
+    state.product={
+      productName:$("productName").value,
+      valueProp:$("valueProp").value,
+      customerProblem:$("customerProblem").value,
+      commercial:$("commercial").value,
+      attributes:$("attributes").value,
+      benefits:$("benefits").value,
+      evidence:$("evidence").value,
+      useCases:$("useCases").value
+    };
+  }
+  function hydrateProduct(){
+    const p=state.product||{};
+    ["productName","valueProp","customerProblem","commercial","attributes","benefits","evidence","useCases"].forEach(k=>{ if($(k)) $(k).value=p[k]||""; });
+  }
+  function defaultNode(title, acronym, x, y){
+    return {
+      id:uid("node"), name:acronym||title, title:title, department:"", company:"",
+      role:"Unassigned", x:x, y:y,
+      pains:"", gains:"", criteria:"",
+      valueAngle:"", message:"", content:"", communication:"", channels:"",
+      action:"", evidence:"", objections:"", influence:3, journey:"Discovery", notes:"", tags:""
+    };
+  }
+  function roleColor(role){
+    return {"Decision Maker":"#003B5C","Push Maker":"#7DBE9A","Influencer":"#7EC8E3","Prescriptor":"#A9A1E8","Unassigned":"#C7D0D9"}[role]||"#C7D0D9";
+  }
+  function renderLibrary(filter=""){
+    roleLibrary.innerHTML="";
+    roles.filter(r=>(r.title+" "+r.acronym+" "+r.desc).toLowerCase().includes(filter.toLowerCase())).forEach(r=>{
+      const card=document.createElement("div");
+      card.className="library-card";
+      card.draggable=true;
+      card.innerHTML=`<span class="acronym">${esc(r.acronym)}</span><strong>${esc(r.title)}</strong><small>${esc(r.desc)}</small>`;
+      card.addEventListener("dragstart",e=>{
+        e.dataTransfer.setData("text/plain",JSON.stringify({title:r.title,acronym:r.acronym}));
+        e.dataTransfer.effectAllowed="copy";
+      });
+      card.addEventListener("dblclick",()=>addNodeAtCenter(r.title,r.acronym));
+      roleLibrary.appendChild(card);
+    });
+  }
+  function addNodeAtCenter(title,acronym){
+    const rect=canvas.getBoundingClientRect();
+    const x=Math.max(20,(rect.width-190)/2 + (Math.random()*60-30));
+    const y=Math.max(20,(rect.height-110)/2 + (Math.random()*60-30));
+    const node=defaultNode(title,acronym,x,y);
+    state.nodes.push(node); state.selectedNodeId=node.id; renderAll(); save();
+  }
+  function addCustomRole(){
+    const val=$("customRoleInput").value.trim();
+    if(!val) return;
+    addNodeAtCenter(val,val.split(/\s+/).map(x=>x[0]).join("").slice(0,5).toUpperCase());
+    $("customRoleInput").value="";
+  }
+  function renderAll(){
+    canvas.querySelectorAll(".map-node").forEach(n=>n.remove());
+    state.nodes.forEach(renderNode);
+    renderEdges();
+    renderInspector();
+    renderTable();
+    updateCounts();
+    canvas.classList.toggle("empty",state.nodes.length===0);
+  }
+  function renderNode(node){
+    const el=document.createElement("div");
+    el.className="map-node"+(state.selectedNodeId===node.id?" selected":"")+(state.connectSourceId===node.id?" connect-source":"");
+    el.dataset.id=node.id; el.dataset.role=node.role;
+    el.style.left=node.x+"px"; el.style.top=node.y+"px";
+    el.innerHTML=`
+      <div class="node-topline"></div>
+      <div class="node-inner">
+        <div class="node-head"><div><strong>${esc(node.name||node.title)}</strong><div class="node-sub">${esc(node.title||"")}</div></div><button title="Delete contact">×</button></div>
+        <div class="role-badge">${esc(node.role)}</div>
+        <div class="node-pain">${esc(node.pains ? "Pain: "+clip(node.pains) : "Open configuration to define pains, gains and decision logic.")}</div>
+      </div>
+      <div class="node-ports"><span class="node-port"></span><span class="node-port"></span></div>`;
+    const deleteBtn=el.querySelector("button");
+    deleteBtn.addEventListener("pointerdown",e=>e.stopPropagation());
+    deleteBtn.addEventListener("click",e=>{e.stopPropagation(); removeNode(node.id);});
+    el.addEventListener("pointerdown",e=>{
+      if(e.target.closest("button")) return;
+      if(state.connectMode){ handleConnectClick(node.id); return; }
+      state.selectedEdgeId=null; state.selectedNodeId=node.id; renderSelectionOnly(); renderInspector(); renderEdges();
+      beginDrag(e,node,el);
+    });
+    el.addEventListener("click",e=>{
+      if(e.target.closest("button")) return;
+      if(!state.connectMode){ state.selectedEdgeId=null; state.selectedNodeId=node.id; renderSelectionOnly(); renderInspector(); renderEdges(); }
+    });
+    canvas.appendChild(el);
+  }
+  function beginDrag(e,node,el){
+    if(e.button!==0) return;
+    const startX=e.clientX,startY=e.clientY,origX=node.x,origY=node.y;
+    el.setPointerCapture(e.pointerId);
+    const move=ev=>{
+      const c=canvas.getBoundingClientRect();
+      node.x=Math.min(Math.max(4,origX+ev.clientX-startX),Math.max(4,c.width-el.offsetWidth-4));
+      node.y=Math.min(Math.max(4,origY+ev.clientY-startY),Math.max(4,c.height-el.offsetHeight-4));
+      el.style.left=node.x+"px"; el.style.top=node.y+"px"; renderEdges();
+    };
+    const up=ev=>{
+      el.releasePointerCapture(ev.pointerId); el.removeEventListener("pointermove",move); el.removeEventListener("pointerup",up); save();
+    };
+    el.addEventListener("pointermove",move); el.addEventListener("pointerup",up);
+  }
+  function renderSelectionOnly(){
+    canvas.querySelectorAll(".map-node").forEach(el=>{
+      el.classList.toggle("selected",el.dataset.id===state.selectedNodeId);
+      el.classList.toggle("connect-source",el.dataset.id===state.connectSourceId);
+    });
+  }
+  function removeNode(id){
+    state.nodes=state.nodes.filter(n=>n.id!==id);
+    state.edges=state.edges.filter(e=>e.source!==id&&e.target!==id);
+    if(state.selectedNodeId===id) state.selectedNodeId=null;
+    if(state.connectSourceId===id){state.connectSourceId=null;state.connectMode=false;}
+    if(state.selectedEdgeId && !state.edges.some(e=>e.id===state.selectedEdgeId)) state.selectedEdgeId=null;
+    renderAll();save();
+  }
+  function nodeById(id){return state.nodes.find(n=>n.id===id);}
+  function edgeStyle(edge){
+    const src=nodeById(edge.source);
+    const type=edge.type==="auto" ? autoRelation(src&&src.role) : edge.type;
+    if(type==="Influence") return {stroke:"#7EC8E3",width:6,dash:"",marker:"arrowInfluence",label:"Influence"};
+    if(type==="Pushes") return {stroke:"#7DBE9A",width:4,dash:"",marker:"arrowPush",label:"Push"};
+    if(type==="Prescribes") return {stroke:"#A9A1E8",width:4,dash:"8 6",marker:"arrowPrescribe",label:"Prescribes"};
+    if(type==="Approves") return {stroke:"#003B5C",width:4,dash:"",marker:"arrowApprove",label:"Authority"};
+    return {stroke:"#8EA0AE",width:3,dash:"5 6",marker:"arrowDefault",label:"Relation"};
+  }
+  function autoRelation(role){
+    if(role==="Influencer") return "Influence";
+    if(role==="Push Maker") return "Pushes";
+    if(role==="Prescriptor") return "Prescribes";
+    if(role==="Decision Maker") return "Approves";
+    return "Collaborates";
+  }
+  function ensureDefs(){
+    edgeLayer.innerHTML=`
+      <defs>
+        <marker id="arrowInfluence" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L11,6 L0,12 z" fill="#7EC8E3"></path></marker>
+        <marker id="arrowPush" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5.5 L0,11 z" fill="#7DBE9A"></path></marker>
+        <marker id="arrowPrescribe" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5.5 L0,11 z" fill="#A9A1E8"></path></marker>
+        <marker id="arrowApprove" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5.5 L0,11 z" fill="#003B5C"></path></marker>
+        <marker id="arrowDefault" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5.5 L0,11 z" fill="#8EA0AE"></path></marker>
+      </defs>`;
+  }
+  function nodeBox(node){
+    const el=canvas.querySelector(`[data-id="${node.id}"]`);
+    const w=el ? el.offsetWidth : 190;
+    const h=el ? el.offsetHeight : 102;
+    return {x:node.x,y:node.y,w,h,cx:node.x+w/2,cy:node.y+h/2};
+  }
+  function boundaryPoint(box, towardX, towardY, pad=7){
+    const dx=towardX-box.cx, dy=towardY-box.cy;
+    if(!dx && !dy) return {x:box.cx,y:box.cy};
+    const halfW=box.w/2+pad, halfH=box.h/2+pad;
+    const scale=1/Math.max(Math.abs(dx)/halfW,Math.abs(dy)/halfH);
+    return {x:box.cx+dx*scale,y:box.cy+dy*scale};
+  }
+  function deleteEdge(id){
+    const edge=state.edges.find(e=>e.id===id);
+    if(!edge) return;
+    state.edges=state.edges.filter(e=>e.id!==id);
+    if(state.selectedEdgeId===id) state.selectedEdgeId=null;
+    renderEdges();save();notify("Relationship deleted.");
+  }
+  function selectEdge(id){
+    state.selectedEdgeId=id;
+    state.selectedNodeId=null;
+    renderSelectionOnly();renderInspector();renderEdges();
+  }
+  function renderEdges(){
+    ensureDefs();
+    state.edges.forEach(edge=>{
+      const a=nodeById(edge.source), b=nodeById(edge.target); if(!a||!b) return;
+      const ab=nodeBox(a), bb=nodeBox(b);
+      const start=boundaryPoint(ab,bb.cx,bb.cy,5);
+      const end=boundaryPoint(bb,ab.cx,ab.cy,12);
+      const x1=start.x, y1=start.y, x2=end.x, y2=end.y;
+      const dx=x2-x1, dy=y2-y1;
+      const curve=Math.max(46,Math.min(180,Math.abs(dx)*.42+Math.abs(dy)*.16));
+      const c1x=x1+(dx>=0?curve:-curve), c1y=y1;
+      const c2x=x2-(dx>=0?curve:-curve), c2y=y2;
+      const d=`M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+      const style=edgeStyle(edge);
+
+      const hit=document.createElementNS("http://www.w3.org/2000/svg","path");
+      hit.setAttribute("d",d); hit.setAttribute("class","edge-hit");
+      hit.dataset.edgeId=edge.id;
+      hit.addEventListener("click",ev=>{ev.stopPropagation();selectEdge(edge.id);});
+      edgeLayer.appendChild(hit);
+
+      const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d",d);
+      path.setAttribute("class","edge-path"+(state.selectedEdgeId===edge.id?" selected":""));
+      path.setAttribute("fill","none"); path.setAttribute("stroke",style.stroke);
+      path.setAttribute("stroke-width",state.selectedEdgeId===edge.id?style.width+2:style.width);
+      if(style.dash) path.setAttribute("stroke-dasharray",style.dash);
+      path.setAttribute("marker-end",`url(#${style.marker})`);
+      path.setAttribute("opacity",state.selectedEdgeId===edge.id?"1":".92");
+      edgeLayer.appendChild(path);
+
+      const midX=(x1+x2)/2, midY=(y1+y2)/2;
+      const text=document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("x",midX); text.setAttribute("y",midY-9); text.setAttribute("class","edge-label");
+      text.setAttribute("text-anchor","middle");
+      text.textContent=edge.note ? clip(edge.note,42) : style.label;
+      edgeLayer.appendChild(text);
+
+      const dir=document.createElementNS("http://www.w3.org/2000/svg","text");
+      dir.setAttribute("x",midX);dir.setAttribute("y",midY+8);dir.setAttribute("class","edge-direction");dir.setAttribute("text-anchor","middle");
+      dir.textContent=`${clip(a.name||a.title,16)} → ${clip(b.name||b.title,16)}`;
+      edgeLayer.appendChild(dir);
+
+      if(state.selectedEdgeId===edge.id){
+        const del=document.createElementNS("http://www.w3.org/2000/svg","g");
+        del.setAttribute("class","edge-delete");del.setAttribute("transform",`translate(${midX+18} ${midY-24})`);
+        del.setAttribute("role","button");del.setAttribute("aria-label","Delete relationship");
+        const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");circle.setAttribute("r","11");
+        const x=document.createElementNS("http://www.w3.org/2000/svg","text");x.setAttribute("x","0");x.setAttribute("y","0");x.textContent="×";
+        del.appendChild(circle);del.appendChild(x);
+        del.addEventListener("click",ev=>{ev.stopPropagation();deleteEdge(edge.id);});
+        edgeLayer.appendChild(del);
+      }
+    });
+  }
+  function renderInspector(){
+    const node=nodeById(state.selectedNodeId);
+    if(!node){
+      inspectorBody.innerHTML=`<div class="inspector-empty">Select a contact node to define its role, pains, gains, decision criteria, value angle, content, communication and journey.</div>`;
+      return;
+    }
+    inspectorBody.innerHTML=`
+      <div class="inspector-form">
+        <div class="inspector-section">
+          <h4>Identity</h4>
+          <div class="two-col">
+            ${fieldInput("Contact label","name",node.name)}
+            ${fieldInput("Job title","title",node.title)}
+          </div>
+          <div class="two-col" style="margin-top:8px">
+            ${fieldInput("Department","department",node.department)}
+            ${fieldInput("Account / Company","company",node.company)}
+          </div>
+        </div>
+        <div class="inspector-section">
+          <h4>Decision role</h4>
+          <div class="role-grid">
+            ${["Decision Maker","Push Maker","Influencer","Prescriptor","Unassigned"].map(r=>`<button class="role-option ${node.role===r?"active":""}" data-role-choice="${esc(r)}">${esc(r)}</button>`).join("")}
+          </div>
+          <div class="subtle" style="margin-top:8px">Roles are contextual. The same person can play a different role for another product or decision.</div>
+        </div>
+        <div class="inspector-section">
+          <h4>Empathy & decision logic</h4>
+          ${fieldArea("Pains","pains",node.pains,"What can make this person resist, delay or block the decision?")}
+          ${fieldArea("Gains","gains",node.gains,"What outcomes, benefits or professional wins does this person seek?")}
+          ${fieldArea("Decision criteria","criteria",node.criteria,"What evidence, KPI, requirement or risk threshold must be satisfied?")}
+          ${fieldArea("Objections / friction","objections",node.objections,"Likely objections, political friction or implementation barriers.")}
+        </div>
+        <div class="inspector-section">
+          <h4>Personalized value journey</h4>
+          ${fieldArea("Value proposition angle","valueAngle",node.valueAngle,"Translate the product value into this person's context.")}
+          ${fieldArea("Key message","message",node.message,"What is the one message this person needs to understand?")}
+          <div class="two-col">
+            ${fieldInput("Content type","content",node.content,"ROI calculator, benchmark, demo...")}
+            ${fieldInput("Communication style","communication",node.communication,"Executive, technical, consultative...")}
+          </div>
+          <div class="two-col" style="margin-top:8px">
+            ${fieldInput("Channels","channels",node.channels,"Email, LinkedIn, partner, meeting...")}
+            ${fieldSelect("Journey stage","journey",node.journey,["Discovery","Research","Validation","Business case","Consensus","Approval","Implementation"])}
+          </div>
+          <div style="margin-top:8px">${fieldArea("Next action","action",node.action,"What action should move this person one step forward?")}</div>
+        </div>
+        <div class="inspector-section">
+          <h4>Evidence & influence</h4>
+          ${fieldArea("Evidence / trust","evidence",node.evidence,"Case, reference, benchmark, certification, proof...")}
+          <div class="field">
+            <label>Influence strength · <span id="influenceValue">${node.influence}</span>/5</label>
+            <input type="range" min="1" max="5" value="${node.influence}" data-node-field="influence" />
+          </div>
+          ${fieldInput("Tags","tags",node.tags,"budget holder, champion, blocker...")}
+          ${fieldArea("Notes","notes",node.notes,"Research notes, hypotheses, unknowns...")}
+        </div>
+        <button class="btn dark" id="startConnectionFromInspector">Connect this contact</button>
+      </div>`;
+    bindInspector(node);
+  }
+  function fieldInput(label,key,value,placeholder=""){return `<div class="field"><label>${esc(label)}</label><input data-node-field="${esc(key)}" value="${esc(value||"")}" placeholder="${esc(placeholder)}"></div>`;}
+  function fieldArea(label,key,value,placeholder=""){return `<div class="field" style="margin-bottom:8px"><label>${esc(label)}</label><textarea data-node-field="${esc(key)}" placeholder="${esc(placeholder)}">${esc(value||"")}</textarea></div>`;}
+  function fieldSelect(label,key,value,opts){return `<div class="field"><label>${esc(label)}</label><select data-node-field="${esc(key)}">${opts.map(o=>`<option ${o===value?"selected":""}>${esc(o)}</option>`).join("")}</select></div>`;}
+  function bindInspector(node){
+    inspectorBody.querySelectorAll("[data-node-field]").forEach(el=>{
+      const evt=el.type==="range"?"input":"input";
+      el.addEventListener(evt,()=>{
+        node[el.dataset.nodeField]=el.type==="range"?Number(el.value):el.value;
+        if(el.dataset.nodeField==="influence"&&$("influenceValue")) $("influenceValue").textContent=el.value;
+        save();
+        const mapEl=canvas.querySelector(`[data-id="${node.id}"]`);
+        if(mapEl){
+          if(["name","title","role","pains"].includes(el.dataset.nodeField)){ renderAll(); }
+        }
+      });
+    });
+    inspectorBody.querySelectorAll("[data-role-choice]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        node.role=btn.dataset.roleChoice; renderAll(); save();
+      });
+    });
+    const connectFrom=$("startConnectionFromInspector");
+    if(connectFrom) connectFrom.addEventListener("click",()=>startConnection(node.id));
+  }
+  function updateCounts(){
+    $("nodeCountPill").textContent=`${state.nodes.length} contact${state.nodes.length===1?"":"s"}`;
+    $("edgeCountPill").textContent=`${state.edges.length} relation${state.edges.length===1?"":"s"}`;
+  }
+  function renderTable(){
+    const body=$("resultsBody");
+    if(!state.nodes.length){body.innerHTML=`<tr><td class="empty-row" colspan="13">Build the map to generate the dataset.</td></tr>`;return;}
+    body.innerHTML=state.nodes.map(n=>`
+      <tr>
+        <td><strong>${esc(n.name||"")}</strong><br><span class="subtle">${esc(n.company||"")}</span></td>
+        <td>${esc(n.title||"")}</td><td>${esc(n.role)}</td><td>${esc(n.pains||"")}</td><td>${esc(n.gains||"")}</td>
+        <td>${esc(n.criteria||"")}</td><td>${esc(n.valueAngle||"")}</td><td>${esc(n.message||"")}</td><td>${esc(n.content||"")}</td>
+        <td>${esc(n.communication||"")}</td><td>${esc(n.channels||"")}</td><td>${esc((n.journey||"")+" · "+(n.action||""))}</td><td>${esc(n.influence)}/5</td>
+      </tr>`).join("");
+  }
+  function startConnection(id=null){
+    if(!state.nodes.length){notify("Add at least two contacts first.");return;}
+    state.connectMode=true; state.connectSourceId=id; $("connectBtn").classList.add("dark"); $("cancelConnectBtn").style.display="";
+    renderSelectionOnly(); notify(id?"Select the target contact.":"Select the source contact.");
+  }
+  function cancelConnection(){
+    state.connectMode=false; state.connectSourceId=null; state.pendingTargetId=null; $("connectBtn").classList.remove("dark"); $("cancelConnectBtn").style.display="none"; renderSelectionOnly();
+  }
+  function handleConnectClick(id){
+    if(!state.connectSourceId){state.connectSourceId=id;renderSelectionOnly();notify("Now select the target contact.");return;}
+    if(state.connectSourceId===id){notify("Choose a different target.");return;}
+    state.pendingTargetId=id; $("relationModal").classList.add("show");
+  }
+  function saveRelation(){
+    const source=nodeById(state.connectSourceId), target=nodeById(state.pendingTargetId); if(!source||!target){cancelConnection();return;}
+    const exists=state.edges.some(e=>e.source===source.id&&e.target===target.id);
+    if(exists){notify("That directional relation already exists.");$("relationModal").classList.remove("show");cancelConnection();return;}
+    state.edges.push({id:uid("edge"),source:source.id,target:target.id,type:$("relationType").value,note:$("relationNote").value.trim()});
+    state.selectedEdgeId=state.edges[state.edges.length-1].id;
+    $("relationModal").classList.remove("show"); $("relationNote").value=""; $("relationType").value="auto"; cancelConnection(); renderEdges(); save(); notify("Relationship created.");
+  }
+  function csvEscape(s){const v=String(s==null?"":s);return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;}
+  function downloadBlob(content,name,type){
+    const blob=new Blob([content],{type}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+  }
+  function exportCSV(){
+    const headers=["Contact","Job title","Department","Account","Role","Pains","Gains","Decision Criteria","Value Proposition Angle","Key Message","Content","Communication","Channels","Journey","Next Action","Evidence","Objections","Influence","Tags","Notes"];
+    const rows=state.nodes.map(n=>[n.name,n.title,n.department,n.company,n.role,n.pains,n.gains,n.criteria,n.valueAngle,n.message,n.content,n.communication,n.channels,n.journey,n.action,n.evidence,n.objections,n.influence,n.tags,n.notes]);
+    const csv=[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\n");
+    downloadBlob("\ufeff"+csv,"Decision_Unit_Dataset.csv","text/csv;charset=utf-8");
+  }
+  function exportJSON(){
+    collectProduct(); downloadBlob(JSON.stringify({product:state.product,nodes:state.nodes,edges:state.edges},null,2),"Decision_Unit_Lab.json","application/json");
+  }
+  async function share(){
+    collectProduct();
+    const summary=`Decision Unit Lab: ${state.product.productName||"B2B product"} · ${state.nodes.length} contacts · ${state.edges.length} relations`;
+    try{
+      if(navigator.share){await navigator.share({title:"Decision Unit Lab",text:summary});}
+      else if(navigator.clipboard){await navigator.clipboard.writeText(summary);notify("Summary copied to clipboard.");}
+      else notify("Sharing is not supported in this browser.");
+    }catch(e){}
+  }
+  function reset(){
+    if(!confirm("Reset the Decision Unit map and product input?")) return;
+    localStorage.removeItem(STORAGE_KEY); state.product={};state.nodes=[];state.edges=[];state.selectedNodeId=null;state.selectedEdgeId=null;cancelConnection();
+    hydrateProduct(); ["productName","valueProp","customerProblem","commercial","attributes","benefits","evidence","useCases"].forEach(k=>$(k).value=""); renderAll(); notify("Lab reset.");
+  }
+  function loadExample(){
+    state.product={
+      productName:"AI Marketing Decision Platform",
+      valueProp:"Improve commercial decision quality by connecting customer data, analytics and actionable recommendations.",
+      customerProblem:"Fragmented data, weak attribution and inconsistent decisions across marketing, data and finance.",
+      commercial:"Annual SaaS contract + implementation package",
+      attributes:"CRM / analytics integration, decision workflows, executive dashboards, AI-assisted insight.",
+      benefits:"Faster decisions, stronger attribution, reduced waste, measurable ROI.",
+      evidence:"Pilot benchmark, reference client, security review, ROI business case.",
+      useCases:"Campaign allocation, customer equity, churn prevention, next-best-action."
+    };
+    hydrateProduct();
+    state.nodes=[];state.edges=[];state.selectedEdgeId=null;
+    const c=canvas.getBoundingClientRect();
+    const nodes=[
+      Object.assign(defaultNode("Chief Marketing Officer","CMO",Math.max(35,c.width*.42),70),{
+        name:"CMO",role:"Decision Maker",department:"Marketing",company:"Target Account",
+        pains:"Low confidence in attribution and pressure to prove business impact.",
+        gains:"Growth, measurable contribution and faster optimization.",
+        criteria:"Commercial impact, adoption, executive visibility and ROI.",
+        valueAngle:"Translate customer data into measurable growth decisions.",
+        message:"Make marketing impact financially visible.",
+        content:"Executive business case + dashboard demo",communication:"Executive / commercial",channels:"Meeting, LinkedIn, email",journey:"Business case",action:"Validate success metrics with CMO",influence:5
+      }),
+      Object.assign(defaultNode("Chief Data Officer","CDO",Math.max(35,c.width*.12),260),{
+        name:"CDO",role:"Prescriptor",department:"Data",company:"Target Account",
+        pains:"Data fragmentation and low activation of governed data.",
+        gains:"Trusted, reusable and business-relevant data activation.",
+        criteria:"Governance, lineage, integration, data quality and scalability.",
+        valueAngle:"Convert governed data into reusable decision intelligence.",
+        message:"Activate data without weakening governance.",
+        content:"Architecture note + data readiness workshop",communication:"Technical / strategic",channels:"Workshop, partner intro",journey:"Validation",action:"Run data readiness assessment",influence:4
+      }),
+      Object.assign(defaultNode("Agency / Partner / Consultant","Agency",35,70),{
+        name:"Strategic Agency",role:"Influencer",department:"External Partner",company:"Agency",
+        pains:"Needs credible tools that strengthen recommendations and client outcomes.",
+        gains:"Differentiated advisory, stronger evidence and client retention.",
+        criteria:"Credibility, compatibility, proof and ease of collaboration.",
+        valueAngle:"Give the agency better evidence for strategic recommendations.",
+        message:"Turn recommendations into measurable decision evidence.",
+        content:"Partner deck + joint case",communication:"Collaborative / expert",channels:"Partner meeting",journey:"Discovery",action:"Build joint recommendation",influence:4
+      }),
+      Object.assign(defaultNode("Chief Financial Officer","CFO",Math.max(35,c.width*.68),290),{
+        name:"CFO",role:"Influencer",department:"Finance",company:"Target Account",
+        pains:"Investment uncertainty and unclear payback.",
+        gains:"Financial transparency, controlled risk and measurable return.",
+        criteria:"ROI, payback, TCO, implementation risk and budget impact.",
+        valueAngle:"Frame the platform as an investment with measurable economic return.",
+        message:"See the financial logic before scaling the investment.",
+        content:"ROI calculator + TCO model",communication:"Financial / concise",channels:"Executive meeting, email",journey:"Business case",action:"Validate ROI assumptions",influence:5
+      })
+    ];
+    state.nodes=nodes;
+    state.edges=[
+      {id:uid("edge"),source:nodes[2].id,target:nodes[0].id,type:"auto",note:"Shapes strategic recommendation"},
+      {id:uid("edge"),source:nodes[1].id,target:nodes[0].id,type:"auto",note:"Prescribes data approach"},
+      {id:uid("edge"),source:nodes[3].id,target:nodes[0].id,type:"auto",note:"Financial approval influence"}
+    ];
+    state.selectedNodeId=nodes[0].id; renderAll();save();notify("Example Decision Unit loaded.");
+  }
+
+  canvas.addEventListener("dragover",e=>{e.preventDefault();e.dataTransfer.dropEffect="copy";});
+  canvas.addEventListener("drop",e=>{
+    e.preventDefault();
+    try{
+      const data=JSON.parse(e.dataTransfer.getData("text/plain"));
+      const rect=canvas.getBoundingClientRect();
+      const node=defaultNode(data.title,data.acronym,Math.max(4,e.clientX-rect.left-95),Math.max(4,e.clientY-rect.top-50));
+      state.nodes.push(node);state.selectedNodeId=node.id;renderAll();save();
+    }catch(err){}
+  });
+  canvas.addEventListener("click",e=>{
+    if(e.target===canvas&&!state.connectMode){state.selectedNodeId=null;state.selectedEdgeId=null;renderSelectionOnly();renderInspector();renderEdges();}
+  });
+
+
+  document.addEventListener("keydown",e=>{
+    if((e.key==="Delete"||e.key==="Backspace") && state.selectedEdgeId){
+      const tag=(document.activeElement&&document.activeElement.tagName)||"";
+      if(["INPUT","TEXTAREA","SELECT"].includes(tag)) return;
+      e.preventDefault();deleteEdge(state.selectedEdgeId);
+    }
+  });
+
+  $("roleSearch").addEventListener("input",e=>renderLibrary(e.target.value));
+  $("addCustomRoleBtn").addEventListener("click",addCustomRole);
+  $("customRoleInput").addEventListener("keydown",e=>{if(e.key==="Enter")addCustomRole();});
+  $("connectBtn").addEventListener("click",()=>startConnection());
+  $("cancelConnectBtn").addEventListener("click",cancelConnection);
+  $("relationCancelBtn").addEventListener("click",()=>{$("relationModal").classList.remove("show");cancelConnection();});
+  $("relationSaveBtn").addEventListener("click",saveRelation);
+  $("relationModal").addEventListener("click",e=>{if(e.target===$("relationModal")){$("relationModal").classList.remove("show");cancelConnection();}});
+  $("csvBtn").addEventListener("click",exportCSV);
+  $("jsonBtn").addEventListener("click",exportJSON);
+  $("downloadBtn").addEventListener("click",exportJSON);
+  $("shareBtn").addEventListener("click",share);
+  $("printBtn").addEventListener("click",()=>window.print());
+  $("resetBtn").addEventListener("click",reset);
+  $("loadExampleBtn").addEventListener("click",loadExample);
+  $("toggleProductBtn").addEventListener("click",()=>{
+    const content=$("productContent"); const hidden=content.style.display==="none"; content.style.display=hidden?"":"none"; $("toggleProductBtn").textContent=hidden?"Hide input":"Show input";
+  });
+  $("leftPanelHead").addEventListener("dblclick",()=>{
+    $("leftPanel").classList.toggle("collapsed");workspace.classList.toggle("left-collapsed");setTimeout(()=>{renderEdges();},250);
+  });
+  $("rightPanelHead").addEventListener("dblclick",()=>{
+    $("rightPanel").classList.toggle("collapsed");workspace.classList.toggle("right-collapsed");setTimeout(()=>{renderEdges();},250);
+  });
+  ["productName","valueProp","customerProblem","commercial","attributes","benefits","evidence","useCases"].forEach(k=>$(k).addEventListener("input",save));
+  window.addEventListener("resize",()=>{state.nodes.forEach(n=>{const r=canvas.getBoundingClientRect();n.x=Math.min(n.x,Math.max(4,r.width-194));n.y=Math.min(n.y,Math.max(4,r.height-108));});renderAll();});
+  window.addEventListener("beforeunload",save);
+
+  window.docroiDecisionUnitApi = {state, renderAll, save};
+  renderLibrary();
+  load();
+})();
+</script>
+<script src="abm-extension.js"></script>
+</body>
+</html>
+
