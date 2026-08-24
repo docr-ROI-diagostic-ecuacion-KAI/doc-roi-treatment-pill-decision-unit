@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Decision Unit Lab → ABM Plan Engine · DOC ROI</title>
+  <title>DOC ROI · Decision Unit Builder</title>
   <meta name="description" content="B2B Decision Unit and Contact Map laboratory for Account-Based Marketing." />
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -932,9 +932,9 @@
   }
   async function share(){
     collectProduct();
-    const summary=`Decision Unit Lab: ${state.product.productName||"B2B product"} · ${state.nodes.length} contacts · ${state.edges.length} relations`;
+    const summary=`DOC ROI · Decision Unit Builder: ${state.product.productName||"B2B product"} · ${state.nodes.length} contacts · ${state.edges.length} relations`;
     try{
-      if(navigator.share){await navigator.share({title:"Decision Unit Lab",text:summary});}
+      if(navigator.share){await navigator.share({title:"DOC ROI · Decision Unit Builder",text:summary});}
       else if(navigator.clipboard){await navigator.clipboard.writeText(summary);notify("Summary copied to clipboard.");}
       else notify("Sharing is not supported in this browser.");
     }catch(e){}
