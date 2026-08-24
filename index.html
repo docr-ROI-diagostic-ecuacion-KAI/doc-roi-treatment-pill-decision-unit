@@ -206,6 +206,8 @@
     .relation-compose .row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
     .subtle{font-size:9px;color:#7A8793;line-height:1.4}
     .bottom-zone{padding:14px 22px 24px}
+    .compact-actions-zone{background:#EAF2F6;border-top:1px solid var(--line)}
+    .bottom-action-row{margin-bottom:0}
     .results{
       max-width:1600px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px rgba(15,23,42,.05);overflow:hidden
     }
@@ -290,6 +292,7 @@
       .workspace{display:block;min-height:650px}
       .canvas-panel{box-shadow:none;border:0;border-radius:0;min-height:650px}
       .bottom-zone{padding:10px 0}
+      .compact-actions-zone{display:none!important}
       .print-only-brand{display:flex!important;align-items:center;gap:14px;background:#05070A;color:#fff;padding:16px 18px;margin-bottom:16px}.print-only-brand img{width:110px;height:auto;border-radius:4px}.results{box-shadow:none;border:0;border-radius:0}.tab-panel{display:none!important}.tab-panel#finalPanel{display:block!important}.final-hero{border-radius:0}.plan-grid,.contact-plan-grid{grid-template-columns:1fr 1fr}.contact-plan{break-inside:avoid}.plan-box{break-inside:avoid}
       .table-wrap{overflow:visible}
       table{min-width:0;font-size:8px}
@@ -488,28 +491,12 @@
     </div>
   </section>
 
-  <section class="bottom-zone">
-    <div class="results">
-      <div class="print-only-brand"><img src="https://docroi.marketing/wp-content/uploads/2026/05/Logo_Negro_DoC_ROI.jpg" alt="DOC ROI"><strong id="printProjectName">ABM Plan</strong></div>
-      <div class="results-head">
-        <div><h3>Decision Unit outputs</h3><p>Dataset, ABM orchestration and final plan generated from the same working map.</p></div>
-        <div class="top-actions">
-          <button class="btn small primary-action" id="generatePlanBtn">Generate ABM plan</button>
-          <button class="btn small" id="csvBtn">Download Decision Unit CSV</button>
-          <button class="btn small" id="journeyCsvBtn">Download Journey CSV</button>
-          <button class="btn small" id="jsonBtn">Download ABM JSON</button>
-          <button class="btn small primary-action" id="crmBtn">Download CRM JSON</button>
-        </div>
-      </div>
-      <div class="bottom-tabs">
-        <button class="tab-btn active" data-tab="datasetPanel">Decision Unit Dataset</button>
-        <button class="tab-btn" data-tab="orchestrationPanel">ABM Orchestration</button>
-        <button class="tab-btn" data-tab="finalPanel">Final ABM Plan</button>
-      </div>
-      <div id="missingDecisionMaker" class="warning-strip">Decision Maker missing: this opportunity needs at least one validated decision stakeholder or a clear research gap.</div>
-      <div class="tab-panel active" id="datasetPanel"><div class="table-wrap"><table><thead><tr><th>Contact</th><th>Title</th><th>Role</th><th>Pains</th><th>Gains</th><th>Decision criteria</th><th>Value angle</th><th>Hook</th><th>Message</th><th>Content</th><th>Communication</th><th>Channels</th><th>Journey / Action</th><th>Influence</th></tr></thead><tbody id="resultsBody"><tr><td class="empty-row" colspan="14">Build the map to generate the dataset.</td></tr></tbody></table></div></div>
-      <div class="tab-panel" id="orchestrationPanel"><div class="orchestration-wrap" id="orchestrationBody"></div></div>
-      <div class="tab-panel" id="finalPanel"><div class="final-plan" id="finalPlanBody"></div></div>
+  <section class="bottom-zone compact-actions-zone" aria-label="Decision Unit quick actions">
+    <div class="abm-action-row bottom-action-row">
+      <button class="btn primary-action" type="button" id="bottomLoadExampleBtn">Load Don Espadin</button>
+      <button class="btn" type="button" id="bottomResetBtn">Reset</button>
+      <button class="btn" type="button" id="bottomShareBtn">Share</button>
+      <button class="btn" type="button" id="bottomPrintBtn">Print ABM plan</button>
     </div>
   </section>
 
@@ -984,6 +971,7 @@
   }
   function renderTable(){
     const body=$("resultsBody");
+    if(!body) return;
     if(!state.nodes.length){body.innerHTML=`<tr><td class="empty-row" colspan="13">Build the map to generate the dataset.</td></tr>`;return;}
     body.innerHTML=state.nodes.map(n=>`
       <tr>
@@ -1144,9 +1132,12 @@
   $("relationCancelBtn").addEventListener("click",()=>{$("relationModal").classList.remove("show");cancelConnection();});
   $("relationSaveBtn").addEventListener("click",saveRelation);
   $("relationModal").addEventListener("click",e=>{if(e.target===$("relationModal")){$("relationModal").classList.remove("show");cancelConnection();}});
-  $("csvBtn").addEventListener("click",exportCSV);
-  $("jsonBtn").addEventListener("click",exportJSON);
-  $("downloadBtn").addEventListener("click",exportJSON);
+  const csvBtn=$("csvBtn");
+  if(csvBtn) csvBtn.addEventListener("click",exportCSV);
+  const jsonBtn=$("jsonBtn");
+  if(jsonBtn) jsonBtn.addEventListener("click",exportJSON);
+  const downloadBtn=$("downloadBtn");
+  if(downloadBtn) downloadBtn.addEventListener("click",exportJSON);
   $("shareBtn").addEventListener("click",share);
   $("printBtn").addEventListener("click",()=>window.print());
   $("resetBtn").addEventListener("click",reset);
@@ -1157,6 +1148,17 @@
     loadExample();
     setTimeout(()=>document.getElementById("abm-workspace")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
   });
+  const bottomLoadExampleBtn = $("bottomLoadExampleBtn");
+  if(bottomLoadExampleBtn) bottomLoadExampleBtn.addEventListener("click",()=>{
+    loadExample();
+    setTimeout(()=>document.getElementById("abm-workspace")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
+  });
+  const bottomResetBtn = $("bottomResetBtn");
+  if(bottomResetBtn) bottomResetBtn.addEventListener("click",reset);
+  const bottomShareBtn = $("bottomShareBtn");
+  if(bottomShareBtn) bottomShareBtn.addEventListener("click",share);
+  const bottomPrintBtn = $("bottomPrintBtn");
+  if(bottomPrintBtn) bottomPrintBtn.addEventListener("click",()=>window.print());
 
   $("toggleProductBtn").addEventListener("click",()=>{
     const content=$("productContent"); const hidden=content.style.display==="none"; content.style.display=hidden?"":"none"; $("toggleProductBtn").textContent=hidden?"Hide input":"Show input";
