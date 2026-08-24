@@ -1043,64 +1043,74 @@
     hydrateProduct(); ["productName","valueProp","customerProblem","commercial","attributes","benefits","evidence","useCases"].forEach(k=>$(k).value=""); renderAll(); notify("Lab reset.");
   }
   function loadExample(){
+    const setValue=(id,value)=>{
+      const el=$(id);
+      if(!el) return;
+      el.value=value;
+      el.dispatchEvent(new Event("input",{bubbles:true}));
+    };
     state.product={
-      productName:"AI Marketing Decision Platform",
-      valueProp:"Improve commercial decision quality by connecting customer data, analytics and actionable recommendations.",
-      customerProblem:"Fragmented data, weak attribution and inconsistent decisions across marketing, data and finance.",
-      commercial:"Annual SaaS contract + implementation package",
-      attributes:"CRM / analytics integration, decision workflows, executive dashboards, AI-assisted insight.",
-      benefits:"Faster decisions, stronger attribution, reduced waste, measurable ROI.",
-      evidence:"Pilot benchmark, reference client, security review, ROI business case.",
-      useCases:"Campaign allocation, customer equity, churn prevention, next-best-action."
+      productName:"Don Espadin · Mezcal Espadin · Foundational Edition",
+      valueProp:"Premium Mexican mezcal positioned for Madrid luxury hospitality accounts that need a distinctive, credible and explainable beverage experience.",
+      customerProblem:"Premium hotels may want differentiated bar, restaurant and events experiences, but the real buying situation, category readiness, distributor pathway, legal requirements and internal decision process must be validated before any commercial proposal.",
+      commercial:"Wholesale price corridor, distributor agreement, legal documentation, delivery model, margin logic and payment terms remain to research. They must not be assumed.",
+      attributes:"Oaxaca origin, mezcal espadin category, artisanal production story, premium hospitality fit, sensory tasting narrative and cocktail-use potential.",
+      benefits:"Potential menu differentiation, premium guest experience, story-rich cocktail service, Mexican category credibility and controlled event activation.",
+      evidence:"Spain mezcal market growth outlook, global premium/craft spirits momentum, cocktail-culture relevance and account-specific research still required for listing, procurement and service feasibility.",
+      useCases:"Premium bar listing, signature cocktail development, curated tasting, Mexican gastronomy experience, private events, banqueting and seasonal guest activation."
     };
     hydrateProduct();
+    const meta={
+      programName:"Don Espadin · Madrid Premium Hotels",
+      orgModel:"Commercial Account",
+      abmModel:"Many",
+      currentWave:"Wave 01 · 10 account slots",
+      programProduct:"Don Espadin · Mezcal Espadin · Foundational Edition",
+      sector:"Premium hospitality / HORECA",
+      geographicMarket:"Madrid, Spain",
+      targetAccounts:"10",
+      strategicObjective:"Determine whether Don Espadin should approach a first wave of premium hotels in Madrid through an ABM programme that researches account fit, buying centres and personalised value arguments before any commercial proposal is made.",
+      opportunityDescription:"The opportunity is intentionally defined as TO RESEARCH. The programme explores whether selected premium hotels could list, test or activate Don Espadin through F&B, bar, events, gastronomy or guest-experience contexts. The account decision cannot be inferred from hotel category alone.",
+      accountHook:"A premium mezcal discovery angle: help the hotel evaluate whether an authentic Oaxaca-origin mezcal can enrich beverage experience, cocktail storytelling and guest differentiation without forcing a premature purchasing decision.",
+      accountName:"Account slot 01 · Premium hotel in Madrid · To research",
+      parentAccount:"Parent group / hotel brand / business unit · To research",
+      expectedValue:"Unknown until account, purchasing model, rotation potential, event use cases and listing economics are validated.",
+      abmBudget:"To define by account value, research depth and tasting or activation format.",
+      whyPursue:"Premium hotels may value differentiated beverage experiences, guest storytelling and curated bar programmes. The account is worth researching if F&B, beverage, events and purchasing roles can be identified and if there is evidence of category openness.",
+      mainRisk:"Decision roles, legal requirements, distributor terms, purchasing process, price corridor, menu economics, staff adoption and guest demand are still unknown.",
+      nextResearchAction:"Identify the target account structure, verify whether mezcal is already present in the beverage offer, map who owns listing and activation decisions, and define the evidence required for a controlled tasting or pilot.",
+      opportunityIndex:"TO VALIDATE · category fit and guest-experience potential.",
+      consecutionIndex:"TO VALIDATE · access path, relationship and purchasing process unknown.",
+      cooperationIndex:"TO VALIDATE · willingness to test or co-create an activation unknown.",
+      otherFactors:"LEGAL / OPERATIONAL PENDING · alcohol distribution, compliance and logistics require validation."
+    };
+    Object.entries(meta).forEach(([id,value])=>setValue(id,value));
     state.nodes=[];state.edges=[];state.selectedEdgeId=null;
     const c=canvas.getBoundingClientRect();
+    const w=Math.max(c.width,900);
     const nodes=[
-      Object.assign(defaultNode("Chief Marketing Officer","CMO",Math.max(35,c.width*.42),70),{
-        name:"CMO",role:"Decision Maker",department:"Marketing",company:"Target Account",
-        pains:"Low confidence in attribution and pressure to prove business impact.",
-        gains:"Growth, measurable contribution and faster optimization.",
-        criteria:"Commercial impact, adoption, executive visibility and ROI.",
-        valueAngle:"Translate customer data into measurable growth decisions.",
-        message:"Make marketing impact financially visible.",
-        content:"Executive business case + dashboard demo",communication:"Executive / commercial",channels:"Meeting, LinkedIn, email",journey:"Business case",action:"Validate success metrics with CMO",influence:5
-      }),
-      Object.assign(defaultNode("Chief Data Officer","CDO",Math.max(35,c.width*.12),260),{
-        name:"CDO",role:"Prescriber",department:"Data",company:"Target Account",
-        pains:"Data fragmentation and low activation of governed data.",
-        gains:"Trusted, reusable and business-relevant data activation.",
-        criteria:"Governance, lineage, integration, data quality and scalability.",
-        valueAngle:"Convert governed data into reusable decision intelligence.",
-        message:"Activate data without weakening governance.",
-        content:"Architecture note + data readiness workshop",communication:"Technical / strategic",channels:"Workshop, partner intro",journey:"Validation",action:"Run data readiness assessment",influence:4
-      }),
-      Object.assign(defaultNode("Agency / Partner / Consultant","Agency",35,70),{
-        name:"Strategic Agency",role:"Influencer",department:"External Partner",company:"Agency",
-        pains:"Needs credible tools that strengthen recommendations and client outcomes.",
-        gains:"Differentiated advisory, stronger evidence and client retention.",
-        criteria:"Credibility, compatibility, proof and ease of collaboration.",
-        valueAngle:"Give the agency better evidence for strategic recommendations.",
-        message:"Turn recommendations into measurable decision evidence.",
-        content:"Partner deck + joint case",communication:"Collaborative / expert",channels:"Partner meeting",journey:"Discovery",action:"Build joint recommendation",influence:4
-      }),
-      Object.assign(defaultNode("Chief Financial Officer","CFO",Math.max(35,c.width*.68),290),{
-        name:"CFO",role:"Influencer",department:"Finance",company:"Target Account",
-        pains:"Investment uncertainty and unclear payback.",
-        gains:"Financial transparency, controlled risk and measurable return.",
-        criteria:"ROI, payback, TCO, implementation risk and budget impact.",
-        valueAngle:"Frame the platform as an investment with measurable economic return.",
-        message:"See the financial logic before scaling the investment.",
-        content:"ROI calculator + TCO model",communication:"Financial / concise",channels:"Executive meeting, email",journey:"Business case",action:"Validate ROI assumptions",influence:5
-      })
+      Object.assign(defaultNode("General Manager","GM",Math.max(35,w*.42),48),{name:"General Manager",role:"Decision Maker",department:"Hotel Management",company:"Premium Madrid hotel account slot",pains:"Protects brand standards, guest experience and commercial coherence. May resist if the initiative feels tactical, risky or unsupported by evidence.",gains:"A differentiated premium experience aligned with hotel positioning and guest expectations.",criteria:"Brand fit, guest relevance, operational feasibility, risk control, account reputation and credible business case.",valueAngle:"Frame Don Espadin as a controlled premium experience opportunity rather than a simple bottle listing.",message:"This can be evaluated as a guest-experience asset with clear operational boundaries.",content:"Executive one-page opportunity brief",communication:"Executive / concise",channels:"Warm introduction, senior meeting",journey:"Validation",action:"Validate whether mezcal fits the hotel positioning and who owns the decision.",evidence:"Brand fit examples, market growth signal and comparable premium beverage activations required.",objections:"May see mezcal as too niche, operationally complex or commercially unproven.",influence:5,tags:"authority, decision context, brand fit",notes:"Start here only if the hotel requires senior permission before F&B exploration."}),
+      Object.assign(defaultNode("F&B Director","F&B",Math.max(35,w*.18),225),{name:"F&B Director",role:"Push Maker",department:"Food & Beverage",company:"Premium Madrid hotel account slot",pains:"Needs menu relevance, supplier reliability and a clear reason to prioritise a new category.",gains:"A distinctive beverage story that can support bar, restaurant and events experiences.",criteria:"Taste profile, menu fit, staff explanation, supply consistency, commercial conditions and operational simplicity.",valueAngle:"Translate Don Espadin into a beverage experience the F&B team can test, explain and operationalise.",message:"A curated mezcal pilot can create differentiation while keeping the first commitment limited.",content:"Pilot concept + tasting agenda",communication:"Consultative / operational",channels:"Email, tasting, F&B workshop",journey:"Hook",action:"Invite the F&B Director to a structured tasting and menu-fit discussion.",evidence:"Category benchmarks, tasting notes, staff-training needs and operating requirements required.",objections:"Risk of slow rotation, training burden, weak guest demand or limited menu fit.",influence:5,tags:"champion, operational owner, menu fit",notes:"Likely internal sponsor if sensory proof and operating model are credible."}),
+      Object.assign(defaultNode("Purchasing Manager","PROC",Math.max(35,w*.66),230),{name:"Purchasing Manager",role:"Influencer",department:"Procurement",company:"Premium Madrid hotel account slot",pains:"Needs supplier clarity, contract conditions, compliance, price discipline and low operational risk.",gains:"Reliable sourcing, transparent conditions and fewer supplier issues.",criteria:"Distributor, legal compliance, pricing, payment terms, delivery reliability, documentation and replacement process.",valueAngle:"Reduce purchasing uncertainty before asking for any buying commitment.",message:"Commercial and operational evidence can be prepared before procurement evaluation.",content:"Procurement evidence checklist",communication:"Structured / factual",channels:"Email, procurement pack",journey:"Research",action:"Identify required procurement documentation and distributor conditions.",evidence:"Legal, logistics, distributor and pricing evidence required.",objections:"Unknown distributor model, compliance risk, delivery conditions or weak margin logic.",influence:4,tags:"risk gate, commercial conditions, supplier approval",notes:"Procurement rarely creates desire, but can block the route if evidence is incomplete."}),
+      Object.assign(defaultNode("Bar Manager","BAR",Math.max(35,w*.42),405),{name:"Bar Manager",role:"Prescriber",department:"Bar / Beverage",company:"Premium Madrid hotel account slot",pains:"Needs a product staff can explain, guests can understand and bartenders can use consistently.",gains:"Signature cocktail potential, story-rich recommendation and category credibility.",criteria:"Taste, mixability, staff training, guest acceptance, service speed and availability.",valueAngle:"Make Don Espadin useful for the bar team through recipes, service narrative and training.",message:"The product story can become a practical bar asset, not only a premium claim.",content:"Cocktail use cases + service script",communication:"Practical / sensory",channels:"Tasting, demo, recipe sheet",journey:"Engagement",action:"Co-design two signature cocktail or tasting-service hypotheses.",evidence:"Recipe tests, staff feedback and guest response required.",objections:"May worry about complexity, unfamiliarity, slow adoption or low guest pull.",influence:4,tags:"technical prescriber, user evidence, cocktail fit",notes:"This role produces practical evidence the F&B Director can trust."}),
+      Object.assign(defaultNode("Events / Banqueting Lead","EVT",Math.max(35,w*.78),70),{name:"Events / Banqueting Lead",role:"Influencer",department:"Events",company:"Premium Madrid hotel account slot",pains:"Needs experiences that are easy to package, sell and deliver reliably.",gains:"Premium event differentiation and memorable guest moments.",criteria:"Event fit, service format, margin logic, staffing, guest profile and repeatability.",valueAngle:"Explore Don Espadin as a premium event activation rather than only a general bar listing.",message:"A mezcal experience can be tested through controlled event contexts.",content:"Event activation concept",communication:"Commercial / experiential",channels:"Meeting, activation sample",journey:"Opening",action:"Validate whether event moments are a viable first use case.",evidence:"Event demand, package economics and delivery process to validate.",objections:"May see it as niche, seasonal or difficult to repeat.",influence:3,tags:"activation route, events, experience",notes:"Useful route if permanent listing is too early."}),
+      Object.assign(defaultNode("Finance Controller","FIN",Math.max(35,w*.77),405),{name:"Finance Controller",role:"Influencer",department:"Finance",company:"Premium Madrid hotel account slot",pains:"Needs margin visibility, controlled risk and confidence that the test will not create hidden costs.",gains:"Clear economics, limited exposure and measurable pilot logic.",criteria:"Unit economics, gross margin, wastage, staff time, event revenue and payment conditions.",valueAngle:"Turn the mezcal opportunity into a bounded financial experiment.",message:"The first decision can be a controlled pilot with measurable assumptions, not a blind listing.",content:"Pilot economics sheet",communication:"Financial / concise",channels:"Email, spreadsheet, management meeting",journey:"Business case",action:"Validate price corridor, margin assumptions and pilot cost envelope.",evidence:"Wholesale price, serving cost, event package economics and expected rotation required.",objections:"Insufficient margin, unclear demand or too much activation cost.",influence:4,tags:"finance gate, pilot economics",notes:"Finance validates whether a test can be defended internally."}),
+      Object.assign(defaultNode("Marketing / Guest Experience","MKT",Math.max(35,w*.08),420),{name:"Marketing / Guest Experience Manager",role:"Push Maker",department:"Marketing / Guest Experience",company:"Premium Madrid hotel account slot",pains:"Needs experiences that feel authentic, premium and communicable without damaging the hotel tone.",gains:"A story-led activation that can support content, guest engagement and brand differentiation.",criteria:"Story credibility, visual appeal, guest profile, brand safety and content potential.",valueAngle:"Use Don Espadin as a culturally credible guest-experience story, not just a beverage SKU.",message:"A controlled mezcal experience can produce content, guest conversation and premium differentiation.",content:"Storytelling pack + guest-experience concept",communication:"Brand / experiential",channels:"Concept deck, content sample, event brief",journey:"Discovery",action:"Validate whether the story fits hotel brand language and guest profile.",evidence:"Origin story, visual assets, responsible drinking guidance and guest-experience fit required.",objections:"May worry about authenticity, tone, cultural fit or guest misunderstanding.",influence:3,tags:"brand story, guest experience, content",notes:"Can make the activation attractive if operations and compliance are solved."})
     ];
     state.nodes=nodes;
     state.edges=[
-      {id:uid("edge"),source:nodes[2].id,target:nodes[0].id,type:"auto",note:"Shapes strategic recommendation"},
-      {id:uid("edge"),source:nodes[1].id,target:nodes[0].id,type:"auto",note:"Prescribes data approach"},
-      {id:uid("edge"),source:nodes[3].id,target:nodes[0].id,type:"auto",note:"Financial approval influence"}
+      {id:uid("edge"),source:nodes[1].id,target:nodes[0].id,type:"Pushes",note:"F&B pushes the operational opportunity to the GM."},
+      {id:uid("edge"),source:nodes[3].id,target:nodes[1].id,type:"Prescribes",note:"Bar validates recipes, service narrative and staff usability for F&B."},
+      {id:uid("edge"),source:nodes[2].id,target:nodes[0].id,type:"Influence",note:"Procurement defines risk, documentation and supplier feasibility."},
+      {id:uid("edge"),source:nodes[5].id,target:nodes[0].id,type:"Influence",note:"Finance validates whether a controlled pilot can be justified."},
+      {id:uid("edge"),source:nodes[4].id,target:nodes[1].id,type:"Influence",note:"Events provides an alternative first-use case if permanent listing is premature."},
+      {id:uid("edge"),source:nodes[6].id,target:nodes[1].id,type:"Pushes",note:"Marketing strengthens the experience and storytelling angle for F&B."},
+      {id:uid("edge"),source:nodes[2].id,target:nodes[1].id,type:"Influence",note:"Purchasing constraints shape what F&B can actually test."}
     ];
-    state.selectedNodeId=nodes[0].id; renderAll();save();notify("Example Decision Unit loaded.");
+    state.selectedNodeId=nodes[0].id;
+    renderAll();
+    save();
+    notify("Don Espadin Decision Unit loaded.");
   }
 
   canvas.addEventListener("dragover",e=>{e.preventDefault();e.dataTransfer.dropEffect="copy";});
@@ -1143,7 +1153,10 @@
   $("loadExampleBtn").addEventListener("click",loadExample);
 
   const heroLoadExampleBtn = $("heroLoadExampleBtn");
-  if(heroLoadExampleBtn) heroLoadExampleBtn.addEventListener("click",()=>{loadExample();document.getElementById("abm-workspace")?.scrollIntoView({behavior:"smooth",block:"start"});});
+  if(heroLoadExampleBtn) heroLoadExampleBtn.addEventListener("click",()=>{
+    loadExample();
+    setTimeout(()=>document.getElementById("abm-workspace")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
+  });
 
   $("toggleProductBtn").addEventListener("click",()=>{
     const content=$("productContent"); const hidden=content.style.display==="none"; content.style.display=hidden?"":"none"; $("toggleProductBtn").textContent=hidden?"Hide input":"Show input";

@@ -212,7 +212,7 @@ What should happen next? ${nodes.some(n=>n.role==="Decision Maker") ? "Advance w
   hydrateMeta();
   ABM_FIELDS.forEach(id => { if(document.getElementById(id)) document.getElementById(id).addEventListener("input", writeMeta); });
   document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click",()=>activateTab(btn.dataset.tab)));
-  if(document.getElementById("loadExampleBtn")) document.getElementById("loadExampleBtn").addEventListener("click", donEspadinExample);
+  // The main application owns the Don Espadin loader so the hero and toolbar buttons stay consistent.
   if(document.getElementById("generatePlanBtn")) document.getElementById("generatePlanBtn").addEventListener("click",()=>{renderOutputs();activateTab("finalPanel");});
   if(document.getElementById("journeyCsvBtn")) document.getElementById("journeyCsvBtn").addEventListener("click", exportJourneyCSV, true);
   if(document.getElementById("crmBtn")) document.getElementById("crmBtn").addEventListener("click", exportCRM, true);
@@ -232,4 +232,3 @@ What should happen next? ${nodes.some(n=>n.role==="Decision Maker") ? "Advance w
   setInterval(()=>{renderOutputs(); enhanceInspector();}, 1800);
   setInterval(enhanceInspector, 400);
 })();
-
