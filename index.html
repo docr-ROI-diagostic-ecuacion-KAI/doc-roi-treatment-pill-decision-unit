@@ -52,6 +52,26 @@
     .btn.ghost-dark{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.16)}
     .open-tool-btn{min-width:150px;text-align:center;background:#fff;color:#02070B;border-color:#fff;border-radius:999px;font-size:16px;padding:13px 22px;text-decoration:none}
     .btn.small{padding:7px 9px;font-size:11px}
+
+    .treatment-hero{
+      position:relative;min-height:calc(100svh - 73px);padding:64px 22px 66px;color:#fff;display:flex;align-items:center;
+      background-image:linear-gradient(90deg,rgba(2,12,22,.96) 0%,rgba(0,45,68,.82) 48%,rgba(2,12,22,.74) 100%),url("https://docroi.marketing/wp-content/uploads/2026/08/Background_Decision_Unit.png");
+      background-size:cover;background-position:center;border-bottom:1px solid rgba(216,236,248,.2)
+    }
+    .treatment-hero-inner{width:min(1600px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.72fr);gap:clamp(28px,5vw,74px);align-items:center}
+    .treatment-hero-copy{max-width:850px}
+    .hero-kicker{display:block;margin-bottom:26px;color:#fff;font-size:clamp(13px,1.4vw,24px);line-height:1.16;font-weight:950;letter-spacing:.02em;text-transform:uppercase;text-shadow:0 1px 0 rgba(0,0,0,.28)}
+    .hero-pill{display:inline-flex;align-items:center;width:fit-content;min-height:44px;margin-bottom:clamp(28px,4vw,54px);padding:0 18px;border-radius:999px;background:#EAF6FB;color:#003B5C;border:1px solid rgba(216,236,248,.95);font-size:clamp(12px,1vw,18px);font-weight:950;letter-spacing:.02em;text-transform:uppercase}
+    .treatment-hero h1{margin:0;max-width:920px;color:#fff;font-size:clamp(56px,8vw,122px);line-height:.94;font-weight:950;letter-spacing:0}
+    .treatment-hero p{max-width:790px;margin:32px 0 0;color:#fff;font-size:clamp(21px,2vw,34px);line-height:1.42;font-weight:500}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px}
+    .hero-main-action{min-width:270px;min-height:76px;border-radius:8px!important;background:#fff!important;color:#05070B!important;border:1px solid #fff!important;display:inline-flex;align-items:center;justify-content:center;padding:0 28px;font-size:clamp(18px,1.7vw,29px)!important;font-weight:950;text-decoration:none;box-shadow:0 12px 26px rgba(0,0,0,.18)}
+    .hero-video-card{width:min(100%,526px);justify-self:end;border:1px solid rgba(255,255,255,.42);border-radius:8px;background:rgba(5,7,11,.46);padding:16px 16px 22px;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.24);backdrop-filter:blur(8px)}
+    .hero-video-thumb{min-height:236px;border-radius:6px;background-image:linear-gradient(90deg,rgba(0,59,92,.45),rgba(3,7,14,.18)),url("https://docroi.marketing/wp-content/uploads/2026/08/Background_Decision_Unit.png");background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .play-button{width:88px;height:88px;border-radius:50%;background:#fff;color:#05070B;display:inline-flex;align-items:center;justify-content:center;font-size:40px;line-height:1;padding-left:7px;box-shadow:0 14px 35px rgba(0,0,0,.22)}
+    .hero-video-caption{display:grid;gap:6px;padding:18px 2px 0}.hero-video-caption strong{color:#fff;font-size:clamp(18px,1.5vw,24px);line-height:1.05;font-weight:950}.hero-video-caption span{color:#fff;font-size:clamp(22px,2vw,31px);line-height:1.02;font-weight:950;letter-spacing:.01em}
+    #abm-workspace,#abm-programme{scroll-margin-top:88px}
+
     .product-stage{
       padding:18px 22px 14px;background:linear-gradient(180deg,#FFFFFF 0%,#F7FAFC 100%);border-bottom:1px solid var(--line)
     }
@@ -247,6 +267,9 @@
       .product-grid,.abm-grid,.abm-grid.three{grid-template-columns:1fr 1fr}
     }
     @media (max-width:900px){
+
+      .treatment-hero-inner{grid-template-columns:1fr;align-items:start}.hero-video-card{justify-self:start;width:min(100%,620px)}.treatment-hero{min-height:auto;padding:52px 10px 58px}
+
       .product-stage,.workspace-wrap,.bottom-zone{padding-left:10px;padding-right:10px}
       .workspace,.workspace.left-collapsed,.workspace.right-collapsed,.workspace.left-collapsed.right-collapsed{
         grid-template-columns:1fr;grid-template-rows:auto minmax(620px,1fr) auto
@@ -256,6 +279,8 @@
       .side-panel.collapsed .panel-head{height:52px;align-items:center}
       .library{grid-template-columns:repeat(2,minmax(0,1fr))}
       .product-grid,.abm-grid,.abm-grid.three,.plan-grid,.contact-plan-grid{grid-template-columns:1fr}
+
+      .treatment-hero{padding:34px 10px 42px;background-position:center}.hero-kicker{margin-bottom:18px}.hero-pill{min-height:38px;margin-bottom:30px}.treatment-hero h1{font-size:clamp(48px,17vw,78px)}.treatment-hero p{margin-top:24px;font-size:21px;line-height:1.34}.hero-actions{flex-direction:column;margin-top:30px}.hero-main-action{width:100%;min-width:0;min-height:62px;font-size:20px!important}.hero-video-card{padding:10px 10px 16px}.hero-video-thumb{min-height:184px}.play-button{width:72px;height:72px;font-size:32px}
       .topbar{align-items:flex-start}
     }
     @media print{
@@ -283,7 +308,29 @@
   </header>
 
 
-  <section class="abm-stage">
+  <section class="treatment-hero" aria-labelledby="hero-title">
+    <div class="treatment-hero-inner">
+      <div class="treatment-hero-copy">
+        <span class="hero-kicker">STRATEGY SPECIALIZATION · MARKET RESEARCH STRATEGY</span>
+        <span class="hero-pill">TREATMENT · PILL · DECISION UNIT SYSTEM</span>
+        <h1 id="hero-title">Build My Decision Unit</h1>
+        <p>A structured learning experience to map the buying group, understand influence, connect contacts and transform Decision Unit intelligence into an Account-Based Marketing plan.</p>
+        <div class="hero-actions" aria-label="Decision Unit hero actions">
+          <button class="hero-main-action" type="button" id="heroLoadExampleBtn">Load Don Espadín</button>
+          <a class="hero-main-action" href="#abm-workspace">Open Tool</a>
+        </div>
+      </div>
+      <article class="hero-video-card" aria-label="Decision Unit System intro video placeholder">
+        <div class="hero-video-thumb"><span class="play-button" aria-hidden="true">▶</span></div>
+        <div class="hero-video-caption">
+          <strong>Decision Unit System</strong>
+          <span>INTRO VIDEO PLACEHOLDER</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="abm-stage" id="abm-programme">
     <div class="abm-action-row" aria-label="ABM tool actions"><button class="btn primary-action" id="loadExampleBtn">Load Don Espadín</button><button class="btn" id="resetBtn">Reset</button><button class="btn" id="shareBtn">Share</button><button class="btn" id="printBtn">Print ABM plan</button></div>
     <div class="abm-card">
       <div class="section-head">
@@ -1043,6 +1090,10 @@
   $("printBtn").addEventListener("click",()=>window.print());
   $("resetBtn").addEventListener("click",reset);
   $("loadExampleBtn").addEventListener("click",loadExample);
+
+  const heroLoadExampleBtn = $("heroLoadExampleBtn");
+  if(heroLoadExampleBtn) heroLoadExampleBtn.addEventListener("click",()=>{loadExample();document.getElementById("abm-workspace")?.scrollIntoView({behavior:"smooth",block:"start"});});
+
   $("toggleProductBtn").addEventListener("click",()=>{
     const content=$("productContent"); const hidden=content.style.display==="none"; content.style.display=hidden?"":"none"; $("toggleProductBtn").textContent=hidden?"Hide input":"Show input";
   });
